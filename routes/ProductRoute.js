@@ -2,7 +2,7 @@ import express from 'express';
 import {
   getProducts,
   getProductById,
-  saveProduct,
+  createProduct,
   updateProduct,
   deleteProduct,
 } from '../controllers/ProductController.js';
@@ -10,10 +10,10 @@ import { verifyToken } from '../middleware/VerifyToken.js';
 
 const router = express.Router();
 
-router.get('/products', verifyToken, getProducts);
-router.get('/products/:id', verifyToken, getProductById);
-router.post('/products', verifyToken, saveProduct);
-router.patch('/products/:id', verifyToken, updateProduct);
-router.delete('/products/:id', verifyToken, deleteProduct);
+router.get('/products', getProducts);
+router.get('/products/:id', getProductById);
+router.post('/products', createProduct);
+router.patch('/products/:id', updateProduct);
+router.delete('/products/:id', deleteProduct);
 
 export default router;

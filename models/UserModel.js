@@ -10,6 +10,8 @@ const Users = db.define(
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     role_id: DataTypes.INTEGER,
+    address: DataTypes.STRING,
+    phone_number: DataTypes.STRING,
     refresh_token: DataTypes.TEXT,
   },
   {

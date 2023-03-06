@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 export const getUsers = async (req, res) => {
   try {
     const users = await Users.findAll({
-      attributes: ['id', 'name', 'email', 'role_id'],
+      attributes: ['id', 'name', 'email', 'role_id', 'address', 'phone_number'],
     });
     res.json(users);
   } catch (error) {
@@ -14,7 +14,8 @@ export const getUsers = async (req, res) => {
 };
 
 export const Register = async (req, res) => {
-  const { name, email, password, confPassword, roleId } = req.body;
+  const { name, email, password, confPassword, roleId, address, phoneNumber } =
+    req.body;
   if (password !== confPassword)
     return res
       .status(400)
@@ -27,6 +28,8 @@ export const Register = async (req, res) => {
       email: email,
       password: hashPassword,
       role_id: roleId,
+      address: address,
+      phone_number: phoneNumber,
     });
     res.json({ msg: 'Register Berhasil' });
   } catch (error) {
@@ -46,6 +49,7 @@ export const Login = async (req, res) => {
     const userId = user[0].id;
     const name = user[0].name;
     const email = user[0].email;
+    const roleId = user[0].role_id;
     const accessToken = jwt.sign(
       { userId, name, email },
       process.env.ACCESS_TOKEN_SECRET,
@@ -53,6 +57,7 @@ export const Login = async (req, res) => {
         expiresIn: '3h',
       }
     );
+
     const refreshToken = jwt.sign(
       { userId, name, email },
       process.env.REFRESH_TOKEN_SECRET,
@@ -72,9 +77,9 @@ export const Login = async (req, res) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-    res.json({ accessToken });
+    res.json({ accessToken, name, user_id: userId, role_id: roleId });
   } catch (error) {
-    res.status(404).json({ msg: 'Email tidak ditemukan' });
+    res.status(400).json({ msg: 'Email tidak ditemukan' });
   }
 };
 

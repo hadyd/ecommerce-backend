@@ -24,14 +24,15 @@ export const getProductById = async (req, res) => {
   }
 };
 
-export const saveProduct = (req, res) => {
+export const createProduct = (req, res) => {
   if (req.files === null)
     return res.status(400).json({ msg: 'No File Uploaded' });
-  const product_name = req.body.product_name;
+  const name = req.body.name;
   const description = req.body.description;
-  const category = req.body.category;
   const price = req.body.price;
   const stock = req.body.stock;
+  const weight = req.body.weight;
+  const categoryId = req.body.categoryId;
 
   const file = req.files.file;
   const fileSize = file.data.length;
@@ -49,13 +50,14 @@ export const saveProduct = (req, res) => {
     if (err) return res.status(500).json({ msg: err.message });
     try {
       await Product.create({
-        product_name: product_name,
+        name: name,
         description: description,
-        category: category,
         price: price,
         stock: stock,
+        weight: weight,
         image: fileName,
         url: url,
+        category_id: categoryId,
       });
       res.status(201).json({ msg: 'Product Created Successfuly' });
     } catch (error) {
@@ -88,29 +90,33 @@ export const updateProduct = async (req, res) => {
       return res.status(422).json({ msg: 'Image must be less than 5 MB' });
 
     const filepath = `./public/images/${product.image}`;
-    fs.unlinkSync(filepath);
+    // fs.unlinkSync(filepath);
 
     file.mv(`./public/images/${fileName}`, (err) => {
       if (err) return res.status(500).json({ msg: err.message });
     });
   }
-  const product_name = req.body.product_name;
+
+  const name = req.body.name;
   const description = req.body.description;
-  const category = req.body.category;
   const price = req.body.price;
   const stock = req.body.stock;
+  const weight = req.body.weight;
+  const categoryId = req.body.categoryId;
+
   const url = `${req.protocol}://${req.get('host')}/images/${fileName}`;
 
   try {
     await Product.update(
       {
-        product_name: product_name,
+        name: name,
         description: description,
-        category: category,
         price: price,
         stock: stock,
+        weight: weight,
         image: fileName,
         url: url,
+        category_id: categoryId,
       },
       {
         where: {

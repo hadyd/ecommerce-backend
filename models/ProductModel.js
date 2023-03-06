@@ -4,15 +4,16 @@ import db from '../config/Database.js';
 const { DataTypes } = Sequelize;
 
 const Product = db.define(
-  'product',
+  'products',
   {
-    product_name: DataTypes.STRING,
+    name: DataTypes.STRING,
     description: DataTypes.STRING,
-    category: DataTypes.STRING,
     price: DataTypes.INTEGER,
     stock: DataTypes.INTEGER,
+    weight: DataTypes.FLOAT,
     image: DataTypes.STRING,
     url: DataTypes.STRING,
+    category_id: DataTypes.STRING,
   },
   {
     freezeTableName: true,
